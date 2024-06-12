@@ -74,4 +74,22 @@ class OrderListRepoTest {
         //THEN
         assertNull(repo.getOrderById("1"));
     }
+
+    @Test
+    void getAllOrders() {
+        //GIVEN
+        OrderListRepo repo = new OrderListRepo();
+        repo.addOrder(new Order("1", List.of(), OrderStatus.PROCESSING));
+        Order order2 = new Order("2", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(order2);
+        Order order3 = new Order("3", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(order3);
+        repo.addOrder(new Order("4", List.of(), OrderStatus.COMPLETED));
+
+        //WHEN
+        List<Order> actual = repo.getAllOrders(OrderStatus.IN_DELIVERY);
+
+        //THEN
+        assertEquals(List.of(order2, order3), actual);
+    }
 }

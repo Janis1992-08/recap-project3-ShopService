@@ -24,7 +24,7 @@ class OrderMapRepoTest {
         Product product1 = new Product("1", "Apfel");
         expected.add(new Order("1", List.of(product1), OrderStatus.PROCESSING));
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -43,7 +43,7 @@ class OrderMapRepoTest {
         Product product1 = new Product("1", "Apfel");
         Order expected = new Order("1", List.of(product1), OrderStatus.PROCESSING);
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -59,8 +59,8 @@ class OrderMapRepoTest {
         //THEN
         Product product1 = new Product("1", "Apfel");
         Order expected = new Order("1", List.of(product1), OrderStatus.PROCESSING);
-        assertEquals(actual, expected);
-        assertEquals(repo.getOrderById("1"), expected);
+        assertEquals(expected, actual);
+        assertEquals(expected, repo.getOrderById("1"));
     }
 
     @Test
@@ -73,5 +73,23 @@ class OrderMapRepoTest {
 
         //THEN
         assertNull(repo.getOrderById("1"));
+    }
+
+    @Test
+    void getAllOrders() {
+        //GIVEN
+        OrderMapRepo repo = new OrderMapRepo();
+        repo.addOrder(new Order("1", List.of(), OrderStatus.PROCESSING));
+        Order order2 = new Order("2", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(order2);
+        Order order3 = new Order("3", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(order3);
+        repo.addOrder(new Order("4", List.of(), OrderStatus.COMPLETED));
+
+        //WHEN
+        List<Order> actual = repo.getAllOrders(OrderStatus.IN_DELIVERY);
+
+        //THEN
+        assertEquals(List.of(order2, order3), actual);
     }
 }
